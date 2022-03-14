@@ -4,20 +4,24 @@ import json
 import re
 
 # '/locations/ac_location_name?query=__VALUE__';
-url = 'https://www.tide-forecast.com'
+site = 'https://www.tide-forecast.com'
 
 locations = [('Half Moon Bay', 'California', 'CA')]
-locations += [('Huntington Beach', 'California', 'CA')]
+locations += [('Huntington Beach', '', 'CA')]
 locations += [('Providence', 'Rhode Island', 'RI')]
 locations += [('Wrightsville Beach', 'North Carolina', 'NC')]
 
 url_list = []
 for loc in locations:
-    url_list += ['/locations/' + loc[0].replace(' ', '-') + '-' + loc[1].replace(' ', '-') + '/tides/latest']
+    url = '/locations/' + loc[0].replace(' ', '-')
+    if len(loc[1]) != 0:
+        url += '-' + loc[1].replace(' ', '-')
+    url += '/tides/latest'
+    url_list.append(url)
 
 loc_daylight_low_tides = {}
 for url_loc in url_list:
-    scrape = get(url + url_loc)
+    scrape = get(site + url_loc)
     if scrape.status_code != 200:
         print('Could not reach the url :', url + url_loc)
         continue
