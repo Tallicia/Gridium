@@ -13,25 +13,25 @@ locations += [('Wrightsville Beach', 'North Carolina', 'NC')]
 
 url_list = []
 for loc in locations:
-    url = '/locations/' + loc[0].replace(' ', '-')
+    page = '/locations/' + loc[0].replace(' ', '-')
     if len(loc[1]) != 0:
-        url += '-' + loc[1].replace(' ', '-')
-    url += '/tides/latest'
-    url_list.append(url)
+        page += '-' + loc[1].replace(' ', '-')
+    page += '/tides/latest'
+    url_list.append(page)
 
 loc_daylight_low_tides = {}
 for url_loc in url_list:
     scrape = get(site + url_loc)
     if scrape.status_code != 200:
-        print('Could not reach the url :', url + url_loc)
+        print('Could not reach the url :', site + url_loc)
         continue
     else:
-        print('Loaded url :', url + url_loc)
+        print('Loaded url :', site + url_loc)
     soup = BeautifulSoup(scrape.text, 'html.parser')
     cdata = soup.find_all('script', string=re.compile(r'CDATA'))
     cdata_str = str(cdata)
     if len(cdata_str) <= 2:
-        print('Expected Data Payload Empty :', url + url_loc)
+        print('Expected Data Payload Empty :', site + url_loc)
         continue
     else:
         print('Processing payload data')
